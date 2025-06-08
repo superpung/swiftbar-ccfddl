@@ -1,0 +1,10 @@
+[project]
+name = "swiftbar-ccfddl"
+version = "0.1.0"
+description = "CCF Deadlines plugin for SwiftBar"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pytz>=2025.2",
+    "pyyaml>=6.0.2",
+]
