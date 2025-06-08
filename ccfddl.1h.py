@@ -146,7 +146,7 @@ def main():
         title = deadline["title"]
         year = deadline["year"]
 
-        print(f"{conf_id}: {time_remaining} | color=white")
+        print(f"{conf_id}: {time_remaining}")
         print(f"-- {title} {year} | href={link}")
         if comment:
             print(f"-- {comment} | color=lightgray size=12")
@@ -156,7 +156,9 @@ def main():
 
     print("---")
 
-    print("Links")
+    print("Open")
+    print(f"-- CCFDDL Directory | terminal=false bash='open' param1='{CCFDDL_DIR}'")
+    print("-----")
     print("-- CCF Deadlines | href=https://ccfddl.com")
     print("-- Plugin Homepage | href=https://github.com/superpung/swiftbar-ccfddl")
 
