@@ -15,12 +15,13 @@ Your ddl-tracker for CCF conferences, now in your menu bar!
 ## Installation
 
 1. Install [SwiftBar](https://github.com/swiftbar/SwiftBar) and set `Plugin Folder` (e.g., `~/swiftbar/`)
-2. Clone this repository to a different directory (e.g., `~/i/swiftbar-ccfddl/`) and install dependencies:
+2. Clone this repository to a different directory (e.g., `~/swiftbar/ccfddl/`) and install dependencies:
 
    ```bash
-   mkdir -p ~/i/swiftbar-ccfddl/
-   git clone https://github.com/superpung/swiftbar-ccfddl.git ~/i/swiftbar-ccfddl/
-   cd ~/i/swiftbar-ccfddl/
+   mkdir -p ~/swiftbar/ccfddl/
+   echo "ccfddl/*" >> ~/swiftbar/.swiftbarignore
+   git clone https://github.com/superpung/swiftbar-ccfddl.git ~/swiftbar/ccfddl/
+   cd ~/swiftbar/ccfddl/
    uv sync
    # if you don't have `uv` installed, use pip:
    pip install .
@@ -29,8 +30,9 @@ Your ddl-tracker for CCF conferences, now in your menu bar!
 3. Create the assets directory and download CCF deadline YAML files from [ccfddl/ccf-deadlines](https://github.com/ccfddl/ccf-deadlines):
 
    ```bash
-   mkdir -p ~/i/swiftbar-ccfddl/assets
-   cd ~/i/swiftbar-ccfddl/assets
+   mkdir -p ~/swiftbar/assets/ccfddl/
+   echo "assets/*" >> ~/swiftbar/.swiftbarignore
+   cd ~/swiftbar/assets/ccfddl/
    wget https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference/SE/icse.yml
    # or download specific conference files as needed
    ```
@@ -39,17 +41,17 @@ Your ddl-tracker for CCF conferences, now in your menu bar!
 
    ```diff
    - #!/Users/super/i/swiftbar/.venv/bin/python3
-   + #!/Users/yourname/i/swiftbar-ccfddl/.venv/bin/python3
+   + #!/Users/yourname/swiftbar/ccfddl/.venv/bin/python3
    ...
    - CCFDDL_DIR = os.path.expanduser("~/i/swiftbar/assets/ccfddl")
-   + CCFDDL_DIR = os.path.expanduser("~/i/swiftbar-ccfddl/assets")
+   + CCFDDL_DIR = os.path.expanduser("~/swiftbar/assets/ccfddl")
    ```
 
 5. Make the script executable and create a symbolic link to the script in your SwiftBar plugins directory:
 
    ```bash
-   chmod +x ~/i/swiftbar-ccfddl/ccfddl.1h.py
-   ln -s ~/i/swiftbar-ccfddl/ccfddl.1h.py ~/swiftbar/ccfddl.1h.py
+   chmod +x ~/swiftbar/ccfddl/ccfddl.1h.py
+   ln -s ~/swiftbar/ccfddl/ccfddl.1h.py ~/swiftbar/ccfddl.1h.py
    ```
 
 6. Refresh SwiftBar to see the plugin in action!
