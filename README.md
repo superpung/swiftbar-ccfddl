@@ -10,7 +10,10 @@ Your ddl-tracker for CCF conferences, now in your menu bar!
 - 📋 Lists all future deadlines with countdown timers
 - 🌎 Displays deadline times in both conference timezone and your local timezone
 - 🔄 Automatically updates every hour
+- 🛠️ Easy to manage your favorite conferences
 - 🔗 Links to conference websites
+
+![preview edit](docs/preview-edit.png)
 
 ## Installation
 

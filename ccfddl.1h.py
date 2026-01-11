@@ -15,6 +15,9 @@ import yaml
 
 CCFDDL_DIR = os.path.expanduser("~/i/swiftbar/assets/ccfddl")
 CCFDDL_GH_RAW_BASE = "https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference"
+CCFDDL_GH_CONF_URL = "https://github.com/ccfddl/ccf-deadlines/tree/main/conference"
+CCFDDL_WEB_URL = "https://ccfddl.com"
+HOMEPAGE_URL = "https://github.com/superpung/swiftbar-ccfddl"
 
 
 def parse_yaml_file(file_path):
@@ -174,6 +177,7 @@ def main():
                 f"---- Remove | color=red terminal=false refresh=true bash='mv' param1='{CCFDDL_DIR}/{conf_file}' param2='{CCFDDL_DIR}/{conf_file}.deleted'"
             )
         print("-----")
+    print(f"-- More... | href={CCFDDL_GH_CONF_URL}")
 
     print("---")
 
@@ -182,8 +186,8 @@ def main():
     print(f"-- CCFDDL Directory | terminal=false bash='open' param1='{CCFDDL_DIR}'")
     print("-----")
     print("-- LINKS | color=lightgray")
-    print("-- CCF Deadlines | href=https://ccfddl.com")
-    print("-- Plugin Homepage | href=https://github.com/superpung/swiftbar-ccfddl")
+    print(f"-- CCF Deadlines | href={CCFDDL_WEB_URL}")
+    print(f"-- Plugin Homepage | href={HOMEPAGE_URL}")
 
 
 if __name__ == "__main__":
