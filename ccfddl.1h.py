@@ -14,6 +14,7 @@ import pytz
 import yaml
 
 CCFDDL_DIR = os.path.expanduser("~/i/swiftbar/assets/ccfddl")
+CCFDDL_GH_RAW_BASE = "https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference"
 
 
 def parse_yaml_file(file_path):
@@ -112,14 +113,19 @@ def main():
         print(f"CCFDDL directory not found: {CCFDDL_DIR}")
         return
 
+    confs = {}
     future_deadlines = []
     for yaml_file in os.listdir(CCFDDL_DIR):
         if not yaml_file.endswith(".yml") and not yaml_file.endswith(".yaml"):
             continue
         yaml_path = os.path.join(CCFDDL_DIR, yaml_file)
         data = parse_yaml_file(yaml_path)
-        if data is None:
+        if data is None or len(data) == 0:
             continue
+        conf_type = data[0]["sub"]
+        if conf_type not in confs:
+            confs[conf_type] = []
+        confs[conf_type].append(yaml_file)
         future_deadlines.extend(get_future_deadlines(data))
     future_deadlines.sort(key=lambda x: x["deadline"])
 
@@ -156,9 +162,26 @@ def main():
 
     print("---")
 
+    print("Edit")
+    for conf_type, conf_files in confs.items():
+        print(f"-- {conf_type.upper()} | color=lightgray")
+        for conf_file in conf_files:
+            print(f"-- {conf_file}")
+            print(
+                f"---- Sync | terminal=false refresh=true bash='curl' param1='-o' param2='{CCFDDL_DIR}/{conf_file}' param3='{CCFDDL_GH_RAW_BASE}/{conf_type}/{conf_file}'"
+            )
+            print(
+                f"---- Remove | color=red terminal=false refresh=true bash='mv' param1='{CCFDDL_DIR}/{conf_file}' param2='{CCFDDL_DIR}/{conf_file}.deleted'"
+            )
+        print("-----")
+
+    print("---")
+
     print("Open")
+    print("-- LOCAL | color=lightgray")
     print(f"-- CCFDDL Directory | terminal=false bash='open' param1='{CCFDDL_DIR}'")
     print("-----")
+    print("-- LINKS | color=lightgray")
     print("-- CCF Deadlines | href=https://ccfddl.com")
     print("-- Plugin Homepage | href=https://github.com/superpung/swiftbar-ccfddl")
 
