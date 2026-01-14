@@ -8,7 +8,7 @@
 # <swiftbar.title>CCF Deadlines</swiftbar.title>
 
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import pytz
 import yaml
@@ -108,6 +108,30 @@ def format_time_remaining(deadline_utc):
         return f"{total_hours}h {minutes}m"
 
 
+def display_deadline_info(deadline, level=0):
+    """display the deadline information"""
+    time_remaining = format_time_remaining(deadline["deadline"])
+    local_timezone = datetime.now().astimezone().tzinfo
+    deadline_local_sys = deadline["deadline"].astimezone(local_timezone).strftime("%Y-%m-%d %H:%M")
+    deadline_local = deadline["original_deadline"].strftime("%Y-%m-%d %H:%M")
+    timezone = deadline["timezone"]
+    comment = deadline["comment"]
+    conf_id = deadline["conf_id"]
+    deadline_type = deadline["deadline_type"]
+    link = deadline["link"]
+    title = deadline["title"]
+    year = deadline["year"]
+
+    indent = "--" * level
+    print(f"{indent}{conf_id}: {time_remaining}")
+    print(f"{indent}-- {title} {year} | href={link}")
+    if comment:
+        print(f"{indent}-- {comment} | color=lightgray size=12")
+    print(f"{indent}-- {deadline_type} | color=lightgray size=12")
+    print(f"{indent}-- {deadline_local} {timezone} | color=lightgray size=12")
+    print(f"{indent}-- {deadline_local_sys} {local_timezone} | color=lightgray size=12")
+
+
 def main():
     """main function to run the script"""
     if not os.path.exists(CCFDDL_DIR):
@@ -142,26 +166,20 @@ def main():
 
     print("---")
 
-    for deadline in future_deadlines:
-        time_remaining = format_time_remaining(deadline["deadline"])
-        local_timezone = datetime.now().astimezone().tzinfo
-        deadline_local_sys = deadline["deadline"].astimezone(local_timezone).strftime("%Y-%m-%d %H:%M")
-        deadline_local = deadline["original_deadline"].strftime("%Y-%m-%d %H:%M")
-        timezone = deadline["timezone"]
-        comment = deadline["comment"]
-        conf_id = deadline["conf_id"]
-        deadline_type = deadline["deadline_type"]
-        link = deadline["link"]
-        title = deadline["title"]
-        year = deadline["year"]
+    future_display_deadlines = [
+        d for d in future_deadlines if d["deadline"] <= datetime.now(pytz.utc) + timedelta(days=365)
+    ]
+    if not future_display_deadlines:
+        future_display_deadlines = future_deadlines
+    for deadline in future_display_deadlines:
+        display_deadline_info(deadline, level=0)
 
-        print(f"{conf_id}: {time_remaining}")
-        print(f"-- {title} {year} | href={link}")
-        if comment:
-            print(f"-- {comment} | color=lightgray size=12")
-        print(f"-- {deadline_type} | color=lightgray size=12")
-        print(f"-- {deadline_local} {timezone} | color=lightgray size=12")
-        print(f"-- {deadline_local_sys} {local_timezone} | color=lightgray size=12")
+    future_remaining_deadlines = [d for d in future_deadlines if d not in future_display_deadlines]
+    if future_remaining_deadlines:
+        print("---")
+        print("More")
+        for deadline in future_remaining_deadlines:
+            display_deadline_info(deadline, level=1)
 
     print("---")
 
@@ -178,8 +196,6 @@ def main():
             )
         print("-----")
     print(f"-- More... | href={CCFDDL_GH_CONF_URL}")
-
-    print("---")
 
     print("Open")
     print("-- LOCAL | color=lightgray")
