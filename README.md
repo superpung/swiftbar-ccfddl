@@ -1,4 +1,6 @@
-# [CCF-Deadlines](https://github.com/ccfddl/ccf-deadlines) x [SwiftBar](https://github.com/swiftbar/SwiftBar)
+# CCFBar
+
+English | [简体中文](README.zh-CN.md)
 
 Your ddl-tracker for CCF conferences, now in your menu bar!
 
@@ -15,53 +17,86 @@ Your ddl-tracker for CCF conferences, now in your menu bar!
 
 ![preview edit](docs/preview-edit.png)
 
-## Installation
+## Install
 
-1. Install [SwiftBar](https://github.com/swiftbar/SwiftBar) and set `Plugin Folder` (e.g., `~/swiftbar/`)
-2. Clone this repository to a different directory (e.g., `~/swiftbar/ccfddl/`) and install dependencies:
+### Quick install
 
-   ```bash
-   mkdir -p ~/swiftbar/ccfddl/
-   echo "ccfddl/*" >> ~/swiftbar/.swiftbarignore
-   git clone https://github.com/superpung/swiftbar-ccfddl.git ~/swiftbar/ccfddl/
-   cd ~/swiftbar/ccfddl/
-   uv sync
-   # if you don't have `uv` installed, use pip:
-   pip install .
-   ```
+```bash
+curl -fsSL https://github.com/superpung/swiftbar-ccfddl/releases/latest/download/install.sh | bash
+```
 
-3. Create the assets directory and download CCF deadline YAML files from [ccfddl/ccf-deadlines](https://github.com/ccfddl/ccf-deadlines):
+### Manual install
 
-   ```bash
-   mkdir -p ~/swiftbar/assets/ccfddl/
-   echo "assets/*" >> ~/swiftbar/.swiftbarignore
-   cd ~/swiftbar/assets/ccfddl/
-   wget https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference/SE/icse.yml
-   # or download specific conference files as needed
-   ```
+```bash
+brew install --cask swiftbar
+git clone https://github.com/superpung/swiftbar-ccfddl.git
+cd swiftbar-ccfddl
+chmod +x plugin/ccfbar.1h.py
+python3 plugin/ccfbar.1h.py --init   # writes ~/.config/ccfbar/config.json
+# then symlink it into your SwiftBar plugin folder and SwiftBar -> Refresh All:
+ln -s "$(pwd)/plugin/ccfbar.1h.py" "$HOME/<your-SwiftBar-plugin-folder>/ccfbar.1h.py"
+```
 
-4. Edit the [`ccfddl.1h.py`](ccfddl.1h.py) script to set the correct path for the python environment (use `which python3`) and CCF deadline YAML files assets:
-
-   ```diff
-   - #!/Users/super/i/swiftbar/.venv/bin/python3
-   + #!/Users/yourname/swiftbar/ccfddl/.venv/bin/python3
-   ...
-   - CCFDDL_DIR = os.path.expanduser("~/i/swiftbar/assets/ccfddl")
-   + CCFDDL_DIR = os.path.expanduser("~/swiftbar/assets/ccfddl")
-   ```
-
-5. Make the script executable and create a symbolic link to the script in your SwiftBar plugins directory:
-
-   ```bash
-   chmod +x ~/swiftbar/ccfddl/ccfddl.1h.py
-   ln -s ~/swiftbar/ccfddl/ccfddl.1h.py ~/swiftbar/ccfddl.1h.py
-   ```
-
-6. Refresh SwiftBar to see the plugin in action!
+Then add conference YAML files to the configured `data_dir`, or run `bash install.sh` from the local checkout.
 
 ## Configuration
 
-You can change the filename of the script in the SwiftBar plugin directory to change the update frequency. For example, renaming it to `ccfddl.10m.py` will update every 10 minutes.
+CCFBar reads configuration from:
+
+```text
+~/.config/ccfbar/config.json
+```
+
+Set `CCFBAR_CONFIG` to use a different config path. See [config.example.json](config.example.json).
+
+```json
+{
+  "data_dir": "~/.config/ccfbar/conferences",
+  "display": {
+    "within_days": 365,
+    "show_remaining_after_within_days": true
+  },
+  "sources": {
+    "raw_base_url": "https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference",
+    "conference_url": "https://github.com/ccfddl/ccf-deadlines/tree/main/conference"
+  },
+  "conferences": [
+    "SE/icse.yml"
+  ]
+}
+```
+
+Important fields:
+
+- `data_dir`: local directory containing ccfddl `.yml` / `.yaml` files
+- `display.within_days`: show deadlines within this many days before grouping the rest under `More`
+- `sources.raw_base_url`: base URL used by the menu's `Sync` action
+- `conferences`: initial files the installer downloads when the data directory is empty
+
+Add more conference files from [ccfddl/ccf-deadlines](https://github.com/ccfddl/ccf-deadlines/tree/main/conference), then refresh SwiftBar.
+
+The `1h` in `ccfbar.1h.py` is SwiftBar's refresh interval. With the quick installer, set `CCFBAR_REFRESH=10m` to install as `ccfbar.10m.py`.
+
+## Installer Options
+
+- `CCFBAR_REFRESH`: installed plugin refresh interval, default `1h`
+- `CCFBAR_PLUGIN_URL`: override plugin download URL for testing
+- `CCFBAR_CONFIG`: config path, default `~/.config/ccfbar/config.json`
+- `CCFBAR_DATA_DIR`: data directory override
+- `CCFBAR_CONFERENCES`: space-separated initial conference files, such as `SE/icse.yml DB/sigmod.yml CV/cvpr.yml`
+
+Example:
+
+```bash
+curl -fsSL https://github.com/superpung/swiftbar-ccfddl/releases/latest/download/install.sh \
+  | CCFBAR_CONFERENCES="SE/icse.yml DB/sigmod.yml CV/cvpr.yml" bash
+```
+
+## Requirements
+
+- macOS
+- [SwiftBar](https://github.com/swiftbar/SwiftBar)
+- `python3` from the standard macOS developer tools or newer
 
 ## Credits
 

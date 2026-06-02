@@ -1,0 +1,14 @@
+{
+  "data_dir": "~/.config/ccfbar/conferences",
+  "display": {
+    "within_days": 365,
+    "show_remaining_after_within_days": true
+  },
+  "sources": {
+    "raw_base_url": "https://raw.githubusercontent.com/ccfddl/ccf-deadlines/refs/heads/main/conference",
+    "conference_url": "https://github.com/ccfddl/ccf-deadlines/tree/main/conference"
+  },
+  "conferences": [
+    "SE/icse.yml"
+  ]
+}
